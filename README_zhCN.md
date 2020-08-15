@@ -1,13 +1,12 @@
-# Doujinshi Collector Framework
-Collecting Doujinshis from Internet  
-[中文文档](https://github.com/Hochikong/DoujinshiCollectorFramework/README_zhCN.md)
+# 同人志爬虫框架
+这个程序是基于Python的爬虫框架，可以用于各种同人志网站的爬取。
 
-## Installation
+## 安装需求
 
-### requirements:
+### Python版本:
 Python>=3.6
 
-The following dependencies are necessary:
+其他依赖库:
 
 pampy>=0.3.0  
 requests>=2.23.0  
@@ -18,23 +17,23 @@ lxml>=4.5.0
 bs4>=0.0.1  
 pysocks>=1.7.1  
 
-### Install via pip:
+### 通过Pip安装whl（适合熟悉Python的用户）:
 
-Download .whl file from github releases: 
+从Github的releases中下载whl文件：
 
 ```
 pip install djsc-0.0.x-py3-none-any.whl
 ```
 
-### Windows Installer(With plugins):
+### Windows安装包（开箱即用）：
 
-Download the exe from github releases. Just double click it.
+在Github的releases中下载并解压即可安装（已捆绑部分插件）。
 
-## How to use
+## 如何使用
 
-The following example is running on Windows 10:
+下面的例子运行在Win 10上，使用的是whl的安装方式:
 
-1. Copy the config_demo.ini from github repository, edit the configuration file:
+1. 从Github仓库中下载config_demo.ini，并根据你的需求编辑：
 
    ```
    [Proxy]
@@ -74,13 +73,13 @@ The following example is running on Windows 10:
    plugins = djscp:EXAMPLE
    ```
 
-   I use shadowsocksr as proxy on Windows, it listens on port 5082.
+   Proxy部分是为支持socks协议的代理软件使用的，具体什么软件请自己查。
 
-   Max workers is the maximum workers for concurrent.futures.ThreadPoolExecutor().
+   Max workers是作为concurrent.futures.ThreadPoolExecutor()的最大worker数量。
 
-   Timeout is for requests.get()
+   Timeout是提供给requests.get()的。
 
-   Plugins setting depends on what plugin you have installed. For example, I build a plugin package call "djscp", the "entry_points" setting of setup.py, as you see below:
+   Plugins部分的设置要看你安装了何种插件。比如, 我构建了一个插件包叫"djscp"，包中的setup.py有如下设置。其中"entry_points"是最重要的。
 
     
 
@@ -93,14 +92,14 @@ The following example is running on Windows 10:
        },
    ```
 
-   so, you plugins setting in config_demo.ini should like this:
+   参考上面的setup.py的entry_point设置，你的 config_demo.ini应该像这样：
 
    ```
    [Main]
    plugins = djscp:A, djscp:B
    ```
 
-2. Run the djsc.exe
+2. 运行djsc.exe：
 
    ```
    PS H:\> djsc.exe -h
@@ -118,7 +117,7 @@ The following example is running on Windows 10:
      -f SOURCE FILE [TARGET FILE ...], --convert SOURCE FILE [TARGET FILE ...]
    ```
    
-   You can use --cfg load your config_demo.ini or load that file later:
+   你可以用 --cfg 加载你的config_demo.ini或者稍后再加载：
    
    
    
@@ -134,7 +133,7 @@ The following example is running on Windows 10:
    Done.
    ```
    
-   You can enter 'help' for useful information:
+   输入help查看帮助信息：
    
    ```
    DJSC|#> help
@@ -181,7 +180,7 @@ The following example is running on Windows 10:
    
    ```
    
-   If you didn't load any plugin as analyzer, enter 'show plugins' will only return those plugins in config_demo.ini:
+   如果你没有加载任何爬虫插件, 输入 'show plugins' 只会显示你在config_demo.ini里所设置的插件：
    
    ```
    DJSC|#> show plugins
@@ -198,7 +197,7 @@ The following example is running on Windows 10:
    
    ```
    
-   Use 'load plugin' to load:
+   使用'load plugin'去加载插件，一次只能加载一个：
    
    ```
    DJSC|#> load plugin djscp:EXAMPLE
@@ -224,21 +223,21 @@ The following example is running on Windows 10:
    
    ```
    
-   After all these preparations, you can use 'download' or 'batch' to download any doujinshis you like.
+   当前面的所有设置都完成后，便可以键入 'download' 或者 'batch' 去下载你想要的同人志。
 
-## How to write your own plugin
+## 如何创建你的插件
 
-1. Install djsc framework.
-2. Import 'AbstractPlugin' and other contents from djscollect.BasePlugin and rewrite all abstract methods.
+1. 安装 djsc framework.
+2.  从 djscollect.BasePlugin导入AbstractPlugin和其他内容，并重写下面的所有抽象方法。
 
-All abstract methods in AbstractPlugin, all input types are depend on you, but all output types should follow the table below:
+AbstractPlugin中的抽象所有方法，需要严格遵守输出类型的格式。:
 
 | Method              | Input Type               | Output type | Description                                                  |
 | ------------------- | ------------------------ | ----------- | ------------------------------------------------------------ |
-| save_url_from_input | List                     | Bool        | load urls from input                                         |
-| get_ids_from_urls   | None                     | List        | generate id from url                                         |
-| next_book           | None                     | Bool        | set next doujinshi to be analyzed                            |
-| prepare_for_analyse | requests.models.Response | Bool        | use Librarian class to download html for analyse             |
-| analyse_title       | None                     | Tuple       | return a tuple which contains three elements, (id, index title, origin title) |
+| save_url_from_input | List                     | Bool        | 从用户输入加载url                                            |
+| get_ids_from_urls   | None                     | List        | 从url生成独立id                                              |
+| next_book           | None                     | Bool        | 令下一本同人志数据用于分析                                   |
+| prepare_for_analyse | requests.models.Response | Bool        | 用Librarian类去下载html用于分析                              |
+| analyse_title       | None                     | Tuple       | 返回一个含三个元素的元组，包含 (id, index title, origin title) |
 | analyse_metadata    | None                     | Dict        | return metadata as a dict                                    |
-| analyse_pic_urls    | None                     | List        | return a list, it contains all pictures' url of a doujinshi  |
+| analyse_pic_urls    | None                     | List        | 返回一个含该同人志的所有图片url的列表                        |
