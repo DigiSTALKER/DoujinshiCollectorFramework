@@ -1,6 +1,6 @@
 # Doujinshi Collector Framework
 Collecting Doujinshis from Internet  
-[中文文档](https://github.com/Hochikong/DoujinshiCollectorFramework/README_zhCN.md)
+[中文文档](https://github.com/Hochikong/DoujinshiCollectorFramework/blob/master/README_zhCN.md)
 
 ## Installation
 
