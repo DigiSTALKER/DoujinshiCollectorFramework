@@ -230,7 +230,7 @@ pip install djsc-0.0.x-py3-none-any.whl
 1. 安装 djsc framework.
 2.  从 djscollect.BasePlugin导入AbstractPlugin和其他内容，并重写下面的所有抽象方法。
 
-AbstractPlugin中的抽象所有方法，需要严格遵守输出类型的格式。:
+AbstractPlugin中的抽象所有方法，需要严格遵守输出类型（输入类型任意）。:
 
 | Method              | Input Type               | Output type | Description                                                  |
 | ------------------- | ------------------------ | ----------- | ------------------------------------------------------------ |
