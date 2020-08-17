@@ -217,6 +217,7 @@ class REPR:
                 pic_urls = self.analyzer.analyse_pic_urls()
 
                 # enter sub dir
+                # use origin title or gallery id
                 enter = self.mgr.enter_sub_dir(title[-1])
                 if not enter:
                     print("Path error, use doujinshi id instead.\n")
