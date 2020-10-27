@@ -303,9 +303,9 @@ class REPR:
                 print("Download failed, enter `help` for help.")
             else:
                 if meta_mode:
-                    self._download([url, ])
-                else:
                     self._meta_download([url, ])
+                else:
+                    self._download([url, ])
             os.chdir(self.home)
         except Exception as e:
             self.println("Download failed and stopped.")
