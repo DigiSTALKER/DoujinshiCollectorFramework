@@ -168,6 +168,10 @@ The following example is running on Windows 10:
                                      - https://zzzzz
                                    #######################################
    
+   meta URL                     -- Download metadata file only.
+
+   batch meta URLS_FILE_PATH    -- Download a bunch of doujinshis' metadata by reading a yaml format file.
+
    pwd                          -- Just pwd.
    
    reset                        -- Reset all configurations.

@@ -43,7 +43,7 @@ batch URLS_FILE_PATH         -- Download a bunch of doujinshis by reading a yaml
                                 
 meta URL                     -- Download metadata file only.
 
-batch meta URLS_FILE_PATH    -- Download a bunch of doujinshis by reading a yaml format file.
+batch meta URLS_FILE_PATH    -- Download a bunch of doujinshis' metadata by reading a yaml format file.
 
 pwd                          -- Just pwd.
 

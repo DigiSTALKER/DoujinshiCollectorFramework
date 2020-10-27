@@ -166,6 +166,10 @@ pip install djsc-0.0.x-py3-none-any.whl
                                      - https://yyyyy
                                      - https://zzzzz
                                    #######################################
+
+   batch meta URLS_FILE_PATH    -- Download a bunch of doujinshis' metadata by reading a yaml format file.
+
+   pwd                          -- Just pwd.
    
    pwd                          -- Just pwd.
    
