@@ -2,7 +2,7 @@
 # @Time    : 2020/6/12 15:50
 # @Author  : Hochikong
 # @FileName: DjsCore.py
-# This program is use for changing paths
+# This program is the core component of djsc
 
 import concurrent.futures
 import json

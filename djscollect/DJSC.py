@@ -2,6 +2,7 @@
 # @Time    : 2020/6/12 15:42
 # @Author  : Hochikong
 # @FileName: DJSC.py
+# This program is the user input handler
 
 import yaml
 import argparse
@@ -101,7 +102,7 @@ class REPR:
             VERSION)
         self.prompt = "DJSC|{}> "
         self.plugins = None
-        self.mgr = None
+        self.djs_core = None
         self.analyzer = None
         self.info = None
         self.current_analyzer = None
@@ -130,9 +131,9 @@ class REPR:
         :return:
         """
         if os.path.exists(path):
-            self.mgr = Librarian(path)
-            if self.mgr.load_cfg():
-                self.plugins = self.mgr.debug_info()['plugins']
+            self.djs_core = Librarian(path)
+            if self.djs_core.load_cfg():
+                self.plugins = self.djs_core.debug_info()['plugins']
                 tmp = [plug.split(":") for plug in self.plugins]
                 result = {}
                 for lis in tmp:
@@ -207,7 +208,7 @@ class REPR:
             try:
                 # start to analyse
                 self.analyzer.next_book()
-                response = self.mgr.smart_get(
+                response = self.djs_core.smart_get(
                     self.analyzer.current_book[0][0],
                     self.analyzer.current_book[0][1])
                 self.analyzer.prepare_for_analyse(response[0])
@@ -218,30 +219,30 @@ class REPR:
 
                 # enter sub dir
                 # use origin title or gallery id
-                enter = self.mgr.enter_sub_dir(title[-1])
+                enter = self.djs_core.enter_sub_dir(title[-1])
                 if not enter:
                     print("Path error, use doujinshi id instead.\n")
-                    self.mgr.enter_sub_dir(title[0])
+                    self.djs_core.enter_sub_dir(title[0])
 
                 # save metadata
                 self.println("Save to: " + os.getcwd())
-                self.mgr.set_metadata(metadata)
-                self.mgr.commit_metadata()
+                self.djs_core.set_metadata(metadata)
+                self.djs_core.commit_metadata()
 
                 # download
                 start = time.time()
                 print(
                     "Downloading {} \n".format(
                         self.analyzer.current_book[0][1]))
-                pas = self.mgr.download_book(pic_urls)
+                pas = self.djs_core.download_book(pic_urls)
                 end = time.time()
-                self.mgr.exit_dir()
+                self.djs_core.exit_dir()
                 print(
                     "Doujinshi {} download done, cost {} seconds.\n".format(
                         title[0], round(
                             (end - start), 2)))
             except StopIteration:
-                self.mgr.pop()
+                self.djs_core.pop()
                 continue
         return True
 
@@ -253,7 +254,7 @@ class REPR:
         """
         self.println(DL_HEAD)
         try:
-            if self.mgr is None or self.analyzer is None:
+            if self.djs_core is None or self.analyzer is None:
                 print("Download failed, enter `help` for help.")
             else:
                 self._download([url, ])
@@ -282,12 +283,12 @@ class REPR:
                             section['author']))
                     if isinstance(section['author'], int):
                         section['author'] = str(section['author'])
-                    self.mgr.enter_sub_dir(section['author'])
+                    self.djs_core.enter_sub_dir(section['author'])
                     if self._download(section['urls']):
                         print(
                             "Author {}'s doujinshi download done.\n".format(
                                 section['author']))
-                    self.mgr.exit_dir()
+                    self.djs_core.exit_dir()
                     self.println(DL_MIDDLE)
                 print("All sections' download done.\n")
             except Exception as e:
@@ -298,7 +299,7 @@ class REPR:
 
     def reset(self):
         self.plugins = None
-        self.mgr = None
+        self.djs_core = None
         self.analyzer = None
         self.info = None
         self.current_analyzer = None

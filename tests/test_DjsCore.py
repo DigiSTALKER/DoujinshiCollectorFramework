@@ -6,7 +6,8 @@ from concurrent.futures import ThreadPoolExecutor
 
 from djscollect.DjsCore import *
 
-normal_headers = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' \
+# Usage: {'headers': normal_headers_content}
+normal_headers_content = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' \
                  '(KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36'
 normal_cookie = '_user_behavior_=83ac17e6-c505-444a-wewew4-9b4bceb0931c; oscid=8OL9erFh4oa3eweMoVA1qULKEM'
 proxy = {'http': 'socks5://127.0.0.1:5082',
@@ -24,7 +25,7 @@ def test__debug():
     lib_normal.load_cfg()
     tmp = lib_normal.debug_info()
     assert tmp['proxy'] == proxy
-    assert tmp['headers']['User-Agent'] == normal_headers
+    assert tmp['headers']['User-Agent'] == normal_headers_content
     assert tmp['headers']['Cookie'] == normal_cookie
     assert isinstance(tmp['pool'], ThreadPoolExecutor)
     assert tmp['timeout'] == 5
@@ -37,13 +38,13 @@ def test__debug():
     lib_wrong.load_cfg()
     tmp = lib_wrong.debug_info()
     assert len(tmp['proxy']) == 0
-    assert tmp['headers']['User-Agent'] == normal_headers
+    assert tmp['headers']['User-Agent'] == normal_headers_content
     assert tmp['root'] != r'D:\Doujinshi'
 
     lib_no_headers_with_proxy.load_cfg()
     tmp = lib_no_headers_with_proxy.debug_info()
     assert tmp['proxy'] == proxy
-    assert tmp['headers']['User-Agent'] == normal_headers
+    assert tmp['headers']['User-Agent'] == normal_headers_content
     assert isinstance(tmp['pool'], ThreadPoolExecutor)
     assert tmp['timeout'] == 5
     assert len(tmp['metadata']) == 0
@@ -54,7 +55,7 @@ def test__debug():
     lib_no_proxy_with_headers.load_cfg()
     tmp = lib_no_proxy_with_headers.debug_info()
     assert tmp['proxy'] == {}
-    assert tmp['headers']['User-Agent'] == normal_headers
+    assert tmp['headers']['User-Agent'] == normal_headers_content
     assert tmp['headers']['Cookie'] == normal_cookie
     assert isinstance(tmp['pool'], ThreadPoolExecutor)
     assert tmp['timeout'] == 5
@@ -66,7 +67,7 @@ def test__debug():
     lib_no_proxy_no_ck_with_ag.load_cfg()
     tmp = lib_no_proxy_no_ck_with_ag.debug_info()
     assert tmp['proxy'] == {}
-    assert tmp['headers']['User-Agent'] == normal_headers
+    assert tmp['headers']['User-Agent'] == normal_headers_content
     assert isinstance(tmp['pool'], ThreadPoolExecutor)
     assert tmp['timeout'] == 5
     assert len(tmp['metadata']) == 0
