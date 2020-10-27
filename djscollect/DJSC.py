@@ -18,17 +18,17 @@ Welcome to use Doujinshi Collector.
 All available commands:
 help                         -- Check useful information.
 
-load cfg CONFIG.INI          -- Load configuration files, check config_demo.ini for reference.
+load_cfg CONFIG.INI          -- Load configuration files, check config_demo.ini for reference.
 
-show plugins                 -- List all registered namespaces and plugins in your configuration file.
+show_plugins                 -- List all registered namespaces and plugins in your configuration file.
                                 And what analyzer currently you use.
 
-load plugin NS:PG            -- Load plugin as analyzer by namespace(NS) and plugin name(PG).
+load_plugin NS:PG            -- Load plugin as analyzer by namespace(NS) and plugin name(PG).
                                 e.g. "load plugins djscp:manga".
 
 download URL                 -- Download a doujinshi. You must use load plugin before this command.
 
-batch URLS_FILE_PATH         -- Download a bunch of doujinshis by reading a yaml format file.
+bulk_down URLS_FILE_PATH     -- Download a bunch of doujinshis by reading a yaml format file.
                                 e.g. urls.yml should like this
                                 #######################################
                                 - author: Author1
@@ -43,7 +43,7 @@ batch URLS_FILE_PATH         -- Download a bunch of doujinshis by reading a yaml
                                 
 meta URL                     -- Download metadata file only.
 
-batch meta URLS_FILE_PATH    -- Download a bunch of doujinshis' metadata by reading a yaml format file.
+bulk_meta URLS_FILE_PATH         -- Download a bunch of doujinshis' metadata by reading a yaml format file.
 
 pwd                          -- Just pwd.
 
@@ -325,6 +325,7 @@ class REPR:
         else:
             with open(yml_path, 'r', encoding='UTF-8') as file:
                 yaml_cfg = yaml.load(file, Loader=yaml.FullLoader)
+            print("Read yaml file done.\n")
             try:
                 for section in yaml_cfg:
                     print(
@@ -336,6 +337,7 @@ class REPR:
                         section['author'] = str(section['author'])
 
                     self.djs_core.enter_sub_dir(section['author'])
+
                     if meta_mode:
                         if self._meta_download(section['urls']):
                             print(
@@ -346,6 +348,7 @@ class REPR:
                             print(
                                 "Author {}'s doujinshi download done.\n".format(
                                     section['author']))
+
                     self.djs_core.exit_dir()
                     self.println(DL_MIDDLE)
                 print("All sections' download done.\n")
@@ -366,51 +369,53 @@ class REPR:
     def run(self):
         print(self.intro)
         while True:
-            result = input(
+            input_content = input(
                 self.prompt.format(
                     self.current_analyzer if self.current_analyzer else '#')).strip()
+            result = input_content.split(" ")
+            cmd = result[0]
             try:
                 self.println()
-                if 'help' in result:
+                if 'help' == cmd:
                     self.help()
                     self.done()
-                elif 'load cfg' in result:
-                    path = result.split(" ")[-1]
+                elif 'load_cfg' == cmd:
+                    path = result[-1]
                     self.load_cfg(path)
                     self.done()
-                elif 'show plugins' in result:
+                elif 'show_plugins' == cmd:
                     self.list_plugins()
                     self.done()
-                elif 'load plugin' in result:
-                    ns = result.split(" ")[-1]
+                elif 'load_plugin' == cmd:
+                    ns = result[-1]
                     self.load_plugin(ns)
                     self.done()
-                elif 'download' in result:
-                    url = result.split(" ")[-1]
+                elif 'download' == cmd:
+                    url = result[-1]
                     self.single_download(url)
                     self.done()
-                elif 'meta' in result:
-                    url = result.split(" ")[-1]
-                    self.single_download(url, True)
-                    self.done()
-                elif 'batch' in result:
-                    path = result.split(" ")[-1]
+                elif 'bulk_down' == cmd:
+                    path = result[-1]
                     self.batch_download(path)
                     self.done()
-                elif 'batch meta' in result:
-                    path = result.split(" ")[-1]
+                elif 'meta' == cmd:
+                    url = result[-1]
+                    self.single_download(url, True)
+                    self.done()
+                elif 'bulk_meta' == cmd:
+                    path = result[-1]
                     self.batch_download(path, True)
                     self.done()
-                elif 'pwd' in result:
+                elif 'pwd' == cmd:
                     print(os.getcwd())
                     self.done()
-                elif 'reset' in result:
+                elif 'reset' == cmd:
                     self.reset()
                     self.done()
-                elif 'cd' in result:
-                    os.chdir(result.split(" ")[-1])
+                elif 'cd' == cmd:
+                    os.chdir(result[-1])
                     self.done()
-                elif 'quit' in result:
+                elif 'quit' == cmd:
                     print("Bye \n")
                     break
                 else:

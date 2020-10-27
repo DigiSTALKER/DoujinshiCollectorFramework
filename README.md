@@ -145,17 +145,17 @@ The following example is running on Windows 10:
    All available commands:
    help                         -- Check useful information.
    
-   load cfg CONFIG.INI          -- Load configuration files, check config_demo.ini for reference.
+   load_cfg CONFIG.INI          -- Load configuration files, check config_demo.ini for reference.
    
-   show plugins                 -- List all registered namespaces and plugins in your configuration file.
+   show_plugins                 -- List all registered namespaces and plugins in your configuration file.
                                    And what analyzer currently you use.
    
-   load plugin NS:PG            -- Load plugin as analyzer by namespace(NS) and plugin name(PG).
+   load_plugin NS:PG            -- Load plugin as analyzer by namespace(NS) and plugin name(PG).
                                    e.g. "load plugins djscp:manga".
    
    download URL                 -- Download a doujinshi. You must use load plugin before this command.
    
-   batch URLS_FILE_PATH         -- Download a bunch of doujinshis by reading a yaml format file.
+   bulk_down URLS_FILE_PATH     -- Download a bunch of doujinshis by reading a yaml format file.
                                    e.g. urls.yml should like this
                                    #######################################
                                    - author: Author1
@@ -170,7 +170,7 @@ The following example is running on Windows 10:
    
    meta URL                     -- Download metadata file only.
 
-   batch meta URLS_FILE_PATH    -- Download a bunch of doujinshis' metadata by reading a yaml format file.
+   bulk_meta URLS_FILE_PATH    -- Download a bunch of doujinshis' metadata by reading a yaml format file.
 
    pwd                          -- Just pwd.
    
