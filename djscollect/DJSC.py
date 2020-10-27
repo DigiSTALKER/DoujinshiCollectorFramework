@@ -9,7 +9,7 @@ import argparse
 from stevedore import driver
 from djscollect.DjsCore import *
 
-VERSION = '0.0.3.2'
+VERSION = '0.0.4'
 DL_HEAD = "+" * 3 + "*" * 40 + "+" * 3
 DL_TAIL = "-" * 3 + "*" * 40 + "-" * 3
 DL_MIDDLE = "#" * 3 + "*" * 40 + "#" * 3
@@ -40,6 +40,10 @@ batch URLS_FILE_PATH         -- Download a bunch of doujinshis by reading a yaml
                                   - https://yyyyy
                                   - https://zzzzz
                                 #######################################
+                                
+meta URL                     -- Download metadata file only.
+
+batch meta URLS_FILE_PATH    -- Download a bunch of doujinshis by reading a yaml format file.
 
 pwd                          -- Just pwd.
 
@@ -225,7 +229,7 @@ class REPR:
                     self.djs_core.enter_sub_dir(title[0])
 
                 # save metadata
-                self.println("Save to: " + os.getcwd())
+                self.println("Metadata saved to: " + os.getcwd())
                 self.djs_core.set_metadata(metadata)
                 self.djs_core.commit_metadata()
 
@@ -246,9 +250,50 @@ class REPR:
                 continue
         return True
 
-    def single_download(self, url):
+    def _meta_download(self, urls):
+        """
+        Download metadata only
+        :param urls: list
+        :return:
+        """
+        # analyse doujinshi info
+        self.analyzer.save_urls_from_input(urls)
+        self.analyzer.get_ids_from_urls()
+
+        for i in range(len(urls)):
+            try:
+                # start to analyse
+                self.analyzer.next_book()
+                response = self.djs_core.smart_get(
+                    self.analyzer.current_book[0][0],
+                    self.analyzer.current_book[0][1])
+                self.analyzer.prepare_for_analyse(response[0])
+
+                title = self.analyzer.analyse_title()
+                metadata = self.analyzer.analyse_metadata()
+                pic_urls = self.analyzer.analyse_pic_urls()
+
+                # enter sub dir
+                # use origin title or gallery id
+                enter = self.djs_core.enter_sub_dir(title[-1])
+                if not enter:
+                    print("Path error, use doujinshi id instead.\n")
+                    self.djs_core.enter_sub_dir(title[0])
+
+                # save metadata
+                self.println("Metadata saved to: " + os.getcwd())
+                self.djs_core.set_metadata(metadata)
+                self.djs_core.commit_metadata()
+
+            except StopIteration:
+                self.djs_core.pop()
+                continue
+        return True
+
+    def single_download(self, url, meta_mode=False):
         """
         Download a single doujinshi. If url not compatible with a current plugin, it won't download anything
+        :param meta_mode: True or False, when meta_mode is True, only metadata will be downloaded.
         :param url: string
         :return:
         """
@@ -257,16 +302,20 @@ class REPR:
             if self.djs_core is None or self.analyzer is None:
                 print("Download failed, enter `help` for help.")
             else:
-                self._download([url, ])
+                if meta_mode:
+                    self._download([url, ])
+                else:
+                    self._meta_download([url, ])
             os.chdir(self.home)
         except Exception as e:
             self.println("Download failed and stopped.")
             print(str(e))
         self.println(DL_TAIL)
 
-    def batch_download(self, yml_path):
+    def batch_download(self, yml_path, meta_mode=False):
         """
         Read yaml file to download more than one doujinshi
+        :param meta_mode: True or False, when meta_mode is True, only metadata will be downloaded.
         :param yml_path: string, a yaml format file's path
         :return:
         """
@@ -281,13 +330,22 @@ class REPR:
                     print(
                         "Downloading author {}'s doujinshi.\n".format(
                             section['author']))
+
+                    # convert int to string if needed
                     if isinstance(section['author'], int):
                         section['author'] = str(section['author'])
+
                     self.djs_core.enter_sub_dir(section['author'])
-                    if self._download(section['urls']):
-                        print(
-                            "Author {}'s doujinshi download done.\n".format(
-                                section['author']))
+                    if meta_mode:
+                        if self._meta_download(section['urls']):
+                            print(
+                                "Author {}'s doujinshi' metadata download done.\n".format(
+                                    section['author']))
+                    else:
+                        if self._download(section['urls']):
+                            print(
+                                "Author {}'s doujinshi download done.\n".format(
+                                    section['author']))
                     self.djs_core.exit_dir()
                     self.println(DL_MIDDLE)
                 print("All sections' download done.\n")
@@ -331,9 +389,17 @@ class REPR:
                     url = result.split(" ")[-1]
                     self.single_download(url)
                     self.done()
+                elif 'meta' in result:
+                    url = result.split(" ")[-1]
+                    self.single_download(url, True)
+                    self.done()
                 elif 'batch' in result:
                     path = result.split(" ")[-1]
                     self.batch_download(path)
+                    self.done()
+                elif 'batch meta' in result:
+                    path = result.split(" ")[-1]
+                    self.batch_download(path, True)
                     self.done()
                 elif 'pwd' in result:
                     print(os.getcwd())
