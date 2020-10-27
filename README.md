@@ -126,7 +126,7 @@ The following example is running on Windows 10:
    PS H:\> djsc.exe
    Welcome to use Doujinshi Collector v0.0.x Enter 'help' for useful information.
    
-   DJSC|#> load cfg config_demo.ini
+   DJSC|#> load_cfg config_demo.ini
    
 
    Load done.
@@ -188,7 +188,7 @@ The following example is running on Windows 10:
    If you didn't load any plugin as analyzer, enter 'show plugins' will only return those plugins in config_demo.ini:
    
    ```
-   DJSC|#> show plugins
+   DJSC|#> show_plugins
    
    
    All registered namespaces and plugins:
@@ -205,14 +205,14 @@ The following example is running on Windows 10:
    Use 'load plugin' to load:
    
    ```
-   DJSC|#> load plugin djscp:EXAMPLE
+   DJSC|#> load_plugin djscp:EXAMPLE
    
    
    Plugin djscp:EXAMPLE apply done.
    
    Done.
    
-   DJSC|djscp:EXAMPLE> show plugins
+   DJSC|djscp:EXAMPLE> show_plugins
    
    
    All registered namespaces and plugins:

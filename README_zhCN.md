@@ -125,7 +125,7 @@ pip install djsc-0.0.x-py3-none-any.whl
    PS H:\> djsc.exe
    Welcome to use Doujinshi Collector v0.0.x Enter 'help' for useful information.
    
-   DJSC|#> load cfg config_demo.ini
+   DJSC|#> load_cfg config_demo.ini
    
 
    Load done.
@@ -189,7 +189,7 @@ pip install djsc-0.0.x-py3-none-any.whl
    如果你没有加载任何爬虫插件, 输入 'show plugins' 只会显示你在config_demo.ini里所设置的插件：
    
    ```
-   DJSC|#> show plugins
+   DJSC|#> show_plugins
    
    
    All registered namespaces and plugins:
@@ -206,14 +206,14 @@ pip install djsc-0.0.x-py3-none-any.whl
    使用'load plugin'去加载插件，一次只能加载一个：
    
    ```
-   DJSC|#> load plugin djscp:EXAMPLE
+   DJSC|#> load_plugin djscp:EXAMPLE
    
    
    Plugin djscp:EXAMPLE apply done.
    
    Done.
    
-   DJSC|djscp:EXAMPLE> show plugins
+   DJSC|djscp:EXAMPLE> show_plugins
    
    
    All registered namespaces and plugins:
