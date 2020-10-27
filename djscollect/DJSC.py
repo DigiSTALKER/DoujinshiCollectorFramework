@@ -271,7 +271,6 @@ class REPR:
 
                 title = self.analyzer.analyse_title()
                 metadata = self.analyzer.analyse_metadata()
-                pic_urls = self.analyzer.analyse_pic_urls()
 
                 # enter sub dir
                 # use origin title or gallery id
@@ -284,6 +283,8 @@ class REPR:
                 self.println("Metadata saved to: " + os.getcwd())
                 self.djs_core.set_metadata(metadata)
                 self.djs_core.commit_metadata()
+
+                self.djs_core.exit_dir()
 
             except StopIteration:
                 self.djs_core.pop()
