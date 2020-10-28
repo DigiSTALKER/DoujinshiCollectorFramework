@@ -7,11 +7,9 @@
 import concurrent.futures
 import json
 import time
-from typing import Dict
-
 import requests
+from typing import Dict
 from pampy import match, _
-
 from djscollect.ReadConfig import *
 
 ENABLE = 'enable'
@@ -192,8 +190,12 @@ class Librarian:
         handle_result = self.handle_dir_name(dirname)
         self.__dir_stack.append(handle_result)
         try:
-            os.mkdir(handle_result.strip(self.__platform_split))
-            os.rmdir(handle_result.strip(self.__platform_split))
+            target_path = handle_result.strip(self.__platform_split)
+            # try to validate this relative path before next steps
+            if not os.path.exists(target_path):
+                os.mkdir(target_path)
+                os.rmdir(target_path)
+
             done = self.__enter()
             if not done:
                 return False
