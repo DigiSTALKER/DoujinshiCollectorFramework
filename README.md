@@ -1,5 +1,5 @@
 # Doujinshi Collector Framework
-Collecting Doujinshis from Internet  
+Collecting Doujinshis from Internet  -- This tool is for people who want to save the content locally.     
 [中文文档](https://github.com/Hochikong/DoujinshiCollectorFramework/blob/master/README_zhCN.md)
 
 ## Installation
