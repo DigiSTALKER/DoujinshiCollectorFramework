@@ -9,7 +9,7 @@ import argparse
 from stevedore import driver
 from djscollect.DjsCore import *
 
-VERSION = '0.0.4'
+VERSION = '0.0.5'
 DL_HEAD = "+" * 3 + "*" * 40 + "+" * 3
 DL_TAIL = "-" * 3 + "*" * 40 + "-" * 3
 DL_MIDDLE = "#" * 3 + "*" * 40 + "#" * 3
@@ -196,6 +196,7 @@ class REPR:
                 namespace=ns, name=pg, invoke_on_load=True)
             self.analyzer = mgr.driver
             self.current_analyzer = namespace_plugin
+            self.djs_core.pic_save_pattern = self.analyzer.pic_save_pattern
             print("Plugin {} apply done.\n".format(namespace_plugin))
 
     def _download(self, urls):

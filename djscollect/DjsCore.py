@@ -52,6 +52,7 @@ class Librarian:
         self.__platform = None
         self.__split_string = {'Windows': "\\", "Linux": "/"}
         self.__platform_split = None
+        self.pic_save_pattern = ''
 
     def debug_info(self) -> dict:
         return {
@@ -288,11 +289,12 @@ class Librarian:
         :param pic_url: string, url
         :return: bool
         """
-        pattern = re.compile(r"\d+\.[A-Za-z]+")
+        pattern = re.compile(self.pic_save_pattern)
         name = pattern.findall(pic_url)[0] if pattern.findall(pic_url) \
-            else time.strftime("%Y-%m-%d|%H:%M:%S.jpg", time.localtime())
+            else time.strftime("%Y-%m-%d_%H-%M-%S.jpg", time.localtime())
         if name:
             self.save_pic(pic_url, name)
+            print("Downloading {}\n".format(name))
         return False
 
     @c_parameters_type_check
