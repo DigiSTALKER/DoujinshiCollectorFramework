@@ -4,7 +4,7 @@
 # @FileName: BasePlugin.py
 
 from abc import ABCMeta, abstractmethod
-
+from requests import Response
 
 class AnalyseError(Exception):
     pass
@@ -31,7 +31,7 @@ class AbstractPlugin(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def prepare_for_analyse(self) -> bool:
+    def prepare_for_analyse(self, raw: Response) -> bool:
         pass
 
     @abstractmethod
