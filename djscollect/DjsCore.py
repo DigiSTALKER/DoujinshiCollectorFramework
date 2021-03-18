@@ -11,6 +11,7 @@ import requests
 from typing import Dict
 from pampy import match, _
 from djscollect.ReadConfig import *
+from tqdm import tqdm
 
 ENABLE = 'enable'
 DISABLE = 'disable'
@@ -53,6 +54,8 @@ class Librarian:
         self.__split_string = {'Windows': "\\", "Linux": "/"}
         self.__platform_split = None
         self.pic_save_pattern = ''
+
+        self.tqdm_instance: tqdm = None
 
     def debug_info(self) -> dict:
         return {
@@ -294,7 +297,8 @@ class Librarian:
             else time.strftime("%Y-%m-%d_%H-%M-%S.jpg", time.localtime())
         if name:
             self.save_pic(pic_url, name)
-            print("Downloading {}\n".format(name))
+            # print("Downloading {}".format(name))
+        self.tqdm_instance.update(1)
         return False
 
     @c_parameters_type_check
@@ -304,6 +308,7 @@ class Librarian:
         :param pic_urls: list, [url1, url2, url3 ...]
         :return: bool
         """
+        self.tqdm_instance = tqdm(total=len(pic_urls))
         concurrent.futures.wait([self.pool.submit(self.smart_save_pic, single_url)
                                  for single_url in pic_urls], return_when='ALL_COMPLETED')
         return True
