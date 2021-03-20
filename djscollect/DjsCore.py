@@ -311,4 +311,5 @@ class Librarian:
         self.tqdm_instance = tqdm(total=len(pic_urls))
         concurrent.futures.wait([self.pool.submit(self.smart_save_pic, single_url)
                                  for single_url in pic_urls], return_when='ALL_COMPLETED')
+        self.tqdm_instance.close()
         return True
